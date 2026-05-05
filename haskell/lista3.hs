@@ -43,15 +43,26 @@ de a (x:xs)
 
 separarEm (x:xs) a = (ate (a+1) (x:xs), de (a+1) (x:xs))
 
+ocorrenciasDe :: (Eq a) => a -> [a] -> Int
+ocorrenciasDe _ [] = 0
 ocorrenciasDe a (x:xs)
   | a == x = 1 + ocorrenciasDe a xs
   | otherwise = ocorrenciasDe a xs
 
-remover a ys [] = reverse ys
+remover _ ys [] = reverse ys
 remover a (ys) (x:xs)
   | a == x = (remover a ys xs)
   | otherwise = remover a (x:ys) xs
 
-nOcorrencias :: [x] -> [(x, x)]
+nOcorrencias :: (Eq x) => [x] -> [(Int, x)]
 nOcorrencias [] = []
-nOcorrencias (x:xs) = (ocorrenciasDe x (x:xs), x):(nOcorrencias (remover x [] xs))
+nOcorrencias (x:xs) = (ocorrenciasDe (x) (x:xs), x):(nOcorrencias (remover x [] xs))
+
+var2 _ _ [] = []
+var2 l1 l2 (x:xs) = (l1, l2, x):(var2 l1 l2 xs)
+
+var1 _ [] _ = []
+var1 l1 (x:xs) l3 = (var2 l1 x l3) ++ (var1 l1 xs l3) 
+
+produto [] _ _ = []
+produto (x:xs) l2 l3 = (var1 x l2 l3) ++ (produto xs l2 l3)
